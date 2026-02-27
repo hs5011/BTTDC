@@ -6,12 +6,16 @@ import {defineConfig, loadEnv} from 'vite';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    base: './', // Đảm bảo chạy đúng trên GitHub Pages dù là thư mục con
-      build: {
-        outDir: 'dist',
-        assetsDir: 'assets',
-        emptyOutDir: true,
-      },
+    // If your repo is published at https://<user>.github.io/<repo>/,
+    // set the base to the repo name (trailing slash). Using './' also
+    // works for relative assets but won't help the router. When you
+    // build locally `import.meta.env.BASE_URL` will equal this value.
+    base: '/BTTDC/',
+    build: {
+      outDir: 'dist',
+      assetsDir: 'assets',
+      emptyOutDir: true,
+    },
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
