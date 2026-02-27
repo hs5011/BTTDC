@@ -109,9 +109,9 @@ export default function App() {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard toàn thành phố', to: '/' },
-    { icon: FileText, label: 'Mẫu 1', to: '/reports/legal' },
+    /*{ icon: FileText, label: 'Mẫu 1', to: '/reports/legal' },
     { icon: MapPin, label: 'Mẫu 2', to: '/reports/inventory' },
-    { icon: DollarSign, label: 'Mẫu 3', to: '/reports/payment' },
+    { icon: DollarSign, label: 'Mẫu 3', to: '/reports/payment' },*/
     { icon: TrendingUp, label: 'Giải ngân & Cảnh báo', to: '/reports/disbursement' },
     { icon: Briefcase, label: 'Danh mục dự án', to: '/projects' },
     { icon: AlertCircle, label: 'Vướng mắc', to: '/issues' },

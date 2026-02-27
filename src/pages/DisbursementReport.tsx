@@ -51,28 +51,28 @@ export default function DisbursementReport() {
   }, []);
 
   const regionData = [
-    { name: 'TP.HCM', projects: 64, progress: 42.8, disbursed: 7710.62, total: 18005.55, color: '#3b82f6' },
-    { name: 'Bình Dương', projects: 84, progress: 0.2, disbursed: 35.62, total: 15377.98, color: '#f59e0b' },
-    { name: 'Vũng Tàu', projects: 17, progress: 25.4, disbursed: 148.25, total: 582.82, color: '#10b981' },
+    { name: 'TP.HCM', projects: 74, progress: 42.8, disbursed: 7710.62, total: 18005.55, color: '#3b82f6' },
+    { name: 'Bình Dương', projects: 89, progress: 0.2, disbursed: 35.62, total: 15377.98, color: '#f59e0b' },
+    { name: 'Vũng Tàu', projects: 27, progress: 25.4, disbursed: 148.25, total: 582.82, color: '#10b981' },
   ];
 
   const boardData = [
-    { name: 'Ban BT GPMB TP Thủ Đức', value: 1200 },
-    { name: 'Ban QLDA CT Giao thông', value: 13500 },
-    { name: 'Ban QLDA Khu CNC', value: 500 },
-    { name: 'Ban QLDA Khu đô thị mới Thủ Thiêm', value: 1200 },
-    { name: 'Ban QLDA ĐT XD CT Dân dụng & CN', value: 1000 },
+    { name: 'Ban BT GPMB A', value: 1200 },
+    { name: 'Ban QLDA B', value: 13500 },
+    { name: 'Ban QLDA C', value: 500 },
+    { name: 'Ban QLDA D', value: 1200 },
+    { name: 'Ban QLDA E', value: 1000 },
     { name: 'Trung tâm QL Hạ tầng KT', value: 600 },
-    { name: 'Ban QLDA Nông nghiệp', value: 1500 },
-    { name: 'Các BQL quận/huyện', value: 9500 },
+    { name: 'Ban QLDA F', value: 1500 },
+    { name: 'Ban QLDA H', value: 9500 },
   ];
 
   const projectTable = [
     { 
       id: 1, 
-      name: 'BT, HT, TĐC phục vụ DA Cải tạo, nâng cấp QL22 (Hóc Môn)', 
+      name: 'BT, HT, TĐC phục vụ DA Cải tạo, nâng cấp QL22 ', 
       code: 'NSDP-PPP-CT',
-      location: 'Huyện Hóc Môn',
+      location: 'Xã A',
       tmdt: '6.227',
       capital: '6.200',
       disbursed: '0',
@@ -81,14 +81,14 @@ export default function DisbursementReport() {
     },
     { 
       id: 2, 
-      name: 'BT, HT, TĐC huyện Bình Chánh - Nâng cấp QL1 (BOT)', 
+      name: 'BT, HT, TĐC- Nâng cấp QL1 (BOT)', 
       code: 'NSDP-PPP-CT',
-      location: 'Xã Tân Nhựt, xã Bình Chánh',
+      location: 'Xã B',
       tmdt: '8.542,99',
       capital: '3.500',
       disbursed: '3.500',
       rate: 97.93,
-      status: 'Phường Bình Đông: Đang thẩm tr...'
+      status: 'Đang thẩm tra...'
     }
   ];
 
@@ -112,22 +112,22 @@ export default function DisbursementReport() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
           title="TỔNG DỰ ÁN" 
-          value="165" 
+          value="190" 
           subValue="Trên 03 khu vực" 
           icon={Briefcase} 
           color="bg-blue-50 text-blue-600" 
         />
         <StatCard 
           title="VỐN GIAO 2026" 
-          value="48.6k tỷ" 
-          subValue="TMĐT: 451k tỷ" 
+          value="48.55 ngìn tỷ" 
+          subValue="TMĐT: 151.23 nghìn tỷ" 
           icon={DollarSign} 
           color="bg-amber-50 text-amber-600" 
         />
         <StatCard 
           title="TỶ LỆ GIẢI NGÂN" 
-          value="23.24%" 
-          subValue="7.894,49 tỷ đã GN" 
+          value="23.2%" 
+          subValue="7.894 ngìn tỷ" 
           icon={TrendingUp} 
           color="bg-red-50 text-red-600" 
         />
