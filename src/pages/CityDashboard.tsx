@@ -158,13 +158,13 @@ export default function CityDashboard() {
             TỔNG QUAN
           </h3>
           <div className="grid grid-cols-1 gap-6 h-[calc(100%-48px)]">
-            <div className="p-6 bg-[#F8FAFC] border border-slate-200 rounded-[24px] flex flex-col justify-center">
-              <p className="text-xs font-bold text-slate-500 uppercase mb-2">Tổng dự án</p>
-              <p className="text-4xl font-black text-[#111827]">{stats.totalProjects}</p>
+            <div className="p-4 md:p-6 bg-[#F8FAFC] border border-slate-200 rounded-[24px] flex flex-col justify-center">
+              <p className="text-[10px] md:text-xs font-bold text-slate-500 uppercase mb-1 md:mb-2">Tổng dự án</p>
+              <p className="text-3xl md:text-4xl font-black text-[#111827]">{stats.totalProjects}</p>
             </div>
-            <div className="p-6 bg-[#EEF2FF] border border-indigo-100 rounded-[24px] flex flex-col justify-center">
-              <p className="text-xs font-bold text-indigo-500 uppercase mb-2">Tổng mức ĐT</p>
-              <p className="text-4xl font-black text-[#4F46E5]">151.23 nghìn tỷ</p>
+            <div className="p-4 md:p-6 bg-[#EEF2FF] border border-indigo-100 rounded-[24px] flex flex-col justify-center">
+              <p className="text-[10px] md:text-xs font-bold text-indigo-500 uppercase mb-1 md:mb-2">Tổng mức ĐT</p>
+              <p className="text-3xl md:text-4xl font-black text-[#4F46E5]">151.23 nghìn tỷ</p>
             </div>
           </div>
         </div>
@@ -175,28 +175,28 @@ export default function CityDashboard() {
             <DollarSign size={18} className="text-blue-600" />
             TỔNG VỐN & GIẢI NGÂN NĂM 2026
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100%-48px)]">
-            <div className="p-6 bg-[#111827] text-white rounded-[24px] flex flex-col justify-center">
-              <p className="text-xs font-bold text-slate-400 uppercase mb-2">Tổng vốn giao năm</p>
-              <p className="text-4xl font-black leading-tight">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 h-[calc(100%-48px)]">
+            <div className="p-4 md:p-6 bg-[#111827] text-white rounded-[24px] flex flex-col justify-center">
+              <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1 md:mb-2">Tổng vốn giao năm</p>
+              <p className="text-3xl md:text-4xl font-black leading-tight">
                 48.55<br />
-                <span className="text-2xl">nghìn tỷ</span>
+                <span className="text-xl md:text-2xl">nghìn tỷ</span>
               </p>
             </div>
-            <div className="p-6 bg-[#1e293b] text-white rounded-[24px] flex flex-col justify-center">
-              <p className="text-xs font-bold text-slate-400 uppercase mb-2">Vốn GPMB</p>
-              <p className="text-4xl font-black leading-tight">
+            <div className="p-4 md:p-6 bg-[#1e293b] text-white rounded-[24px] flex flex-col justify-center">
+              <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1 md:mb-2">Vốn GPMB</p>
+              <p className="text-3xl md:text-4xl font-black leading-tight">
                 33.97<br />
-                <span className="text-2xl">nghìn tỷ</span>
+                <span className="text-xl md:text-2xl">nghìn tỷ</span>
               </p>
             </div>
-            <div className="p-6 bg-[#2E945B] text-white rounded-[24px] flex flex-col justify-center">
-              <p className="text-xs font-bold text-emerald-200 uppercase mb-2">Đã giải ngân</p>
-              <p className="text-4xl font-black leading-tight mb-2">
+            <div className="p-4 md:p-6 bg-[#2E945B] text-white rounded-[24px] flex flex-col justify-center">
+              <p className="text-[10px] md:text-xs font-bold text-emerald-200 uppercase mb-1 md:mb-2">Đã giải ngân</p>
+              <p className="text-3xl md:text-4xl font-black leading-tight mb-1 md:mb-2">
                 7.89<br />
-                <span className="text-2xl">nghìn tỷ</span>
+                <span className="text-xl md:text-2xl">nghìn tỷ</span>
               </p>
-              <p className="text-sm font-bold">Đạt {formatPercent((stats.disbursedCapital / stats.gpmbCapital) * 100)}</p>
+              <p className="text-xs md:text-sm font-bold">Đạt {formatPercent((stats.disbursedCapital / stats.gpmbCapital) * 100)}</p>
             </div>
           </div>
         </div>

@@ -31,14 +31,14 @@ import { DashboardStats } from '../types';
 import { cn, formatCurrency, formatPercent, formatTrillion } from '../lib/utils';
 
 const StatCard = ({ title, value, subValue, icon: Icon, color }: any) => (
-  <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-start">
-    <div>
-      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">{title}</p>
-      <h3 className="text-2xl font-black text-slate-900 leading-none">{value}</h3>
-      {subValue && <p className="text-xs text-slate-500 mt-2">{subValue}</p>}
+  <div className="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-start">
+    <div className="min-w-0 flex-1">
+      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 md:mb-2 truncate">{title}</p>
+      <h3 className="text-xl md:text-2xl font-black text-slate-900 leading-none truncate">{value}</h3>
+      {subValue && <p className="text-[10px] md:text-xs text-slate-500 mt-2 line-clamp-1">{subValue}</p>}
     </div>
-    <div className={cn("p-2 rounded-lg", color)}>
-      <Icon size={18} />
+    <div className={cn("p-2 rounded-lg shrink-0 ml-3", color)}>
+      <Icon size={18} className="md:w-5 md:h-5" />
     </div>
   </div>
 );
@@ -141,11 +141,11 @@ export default function DisbursementReport() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
         {/* Progress Bars Section */}
         <div className="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
           <h3 className="font-bold text-slate-900 mb-6">Tổng hợp 03 khu vực</h3>
-          <div className="space-y-8">
+          <div className="space-y-6 md:space-y-8">
             {regionData.map((region) => (
               <div key={region.name} className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -156,7 +156,7 @@ export default function DisbursementReport() {
                   <span className="text-xs text-slate-400 font-medium">{region.projects} dự án</span>
                 </div>
                 <div className="flex items-end justify-between">
-                  <span className="text-2xl font-black text-slate-900 leading-none">{region.progress}%</span>
+                  <span className="text-xl md:text-2xl font-black text-slate-900 leading-none">{region.progress}%</span>
                   <span className="text-[10px] text-slate-400 font-bold">{region.disbursed} / {region.total} tỷ</span>
                 </div>
                 <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
@@ -174,7 +174,7 @@ export default function DisbursementReport() {
         <div className="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
           <h3 className="font-bold text-slate-900 mb-2">Giải ngân theo khu vực</h3>
           <p className="text-xs text-slate-400 mb-6">Vốn BT GPMB năm 2026 (tỷ đồng)</p>
-          <div className="h-[250px]">
+          <div className="h-[200px] md:h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={regionData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -194,10 +194,10 @@ export default function DisbursementReport() {
         </div>
 
         {/* Horizontal Bar Chart Section */}
-        <div className="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="md:col-span-2 lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
           <h3 className="font-bold text-slate-900 mb-2">Vốn giao theo Ban quản lý</h3>
           <p className="text-xs text-slate-400 mb-6">Phân bổ vốn BT GPMB năm 2026 (tỷ đồng)</p>
-          <div className="h-[300px]">
+          <div className="h-[250px] md:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={boardData} layout="vertical" margin={{ left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
@@ -231,28 +231,32 @@ export default function DisbursementReport() {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-100 bg-slate-50/50">
-                <th className="px-6 py-4">STT</th>
+                <th className="px-6 py-4 hidden md:table-cell">STT</th>
                 <th className="px-6 py-4">TÊN DỰ ÁN</th>
-                <th className="px-6 py-4">ĐỊA ĐIỂM</th>
-                <th className="px-6 py-4 text-right">TMĐT (TỶ)</th>
+                <th className="px-6 py-4 hidden lg:table-cell">ĐỊA ĐIỂM</th>
+                <th className="px-6 py-4 text-right hidden sm:table-cell">TMĐT (TỶ)</th>
                 <th className="px-6 py-4 text-right">VỐN GIAO 2026</th>
-                <th className="px-6 py-4 text-right">ĐÃ GIẢI NGÂN</th>
+                <th className="px-6 py-4 text-right hidden md:table-cell">ĐÃ GIẢI NGÂN</th>
                 <th className="px-6 py-4 text-center">TỶ LỆ GN</th>
-                <th className="px-6 py-4">TÌNH TRẠNG</th>
+                <th className="px-6 py-4 hidden xl:table-cell">TÌNH TRẠNG</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {projectTable.map((project) => (
                 <tr key={project.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 text-slate-500">{project.id}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-slate-500 hidden md:table-cell">{project.id}</td>
+                  <td className="px-6 py-4 min-w-[200px]">
                     <p className="font-bold text-slate-900 leading-tight">{project.name}</p>
                     <p className="text-[10px] text-slate-400 font-bold mt-1">{project.code}</p>
+                    <div className="lg:hidden mt-2 flex flex-wrap gap-2">
+                      <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-500">{project.location}</span>
+                      <span className="sm:hidden text-[10px] bg-amber-50 px-2 py-0.5 rounded text-amber-600">TMĐT: {project.tmdt}</span>
+                    </div>
                   </td>
-                  <td className="px-6 py-4 text-slate-600">{project.location}</td>
-                  <td className="px-6 py-4 text-right font-bold text-slate-700">{project.tmdt}</td>
+                  <td className="px-6 py-4 text-slate-600 hidden lg:table-cell">{project.location}</td>
+                  <td className="px-6 py-4 text-right font-bold text-slate-700 hidden sm:table-cell">{project.tmdt}</td>
                   <td className="px-6 py-4 text-right font-bold text-blue-600">{project.capital}</td>
-                  <td className="px-6 py-4 text-right font-bold text-slate-700">{project.disbursed}</td>
+                  <td className="px-6 py-4 text-right font-bold text-slate-700 hidden md:table-cell">{project.disbursed}</td>
                   <td className="px-6 py-4 text-center">
                     <span className={cn(
                       "px-2 py-1 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 mx-auto w-fit",
@@ -264,7 +268,7 @@ export default function DisbursementReport() {
                       {project.rate}%
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-xs text-slate-400 italic">{project.status}</td>
+                  <td className="px-6 py-4 text-xs text-slate-400 italic hidden xl:table-cell">{project.status}</td>
                 </tr>
               ))}
             </tbody>

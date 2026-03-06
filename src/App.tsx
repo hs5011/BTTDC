@@ -109,6 +109,7 @@ export default function App() {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard toàn thành phố', to: '/' },
+    { icon: LayoutDashboard, label: 'Dashboard BTGPMB', to: '/dashboard' },
     /*{ icon: FileText, label: 'Mẫu 1', to: '/reports/legal' },
     { icon: MapPin, label: 'Mẫu 2', to: '/reports/inventory' },
     { icon: DollarSign, label: 'Mẫu 3', to: '/reports/payment' },*/
@@ -215,6 +216,7 @@ export default function App() {
         <div className="p-6 lg:p-8 flex-1 overflow-auto">
           <Routes>
             <Route path="/" element={<CityDashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<ProjectList />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/issues" element={<IssueManagement />} />

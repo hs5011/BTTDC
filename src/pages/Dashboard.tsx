@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { formatCurrency, formatPercent, formatArea, formatTrillion, cn } from '../lib/utils';
 import { 
-  TrendingUp, 
-  TrendingDown, 
-  Briefcase, 
-  AlertCircle, 
   DollarSign, 
+  Users, 
   Map, 
-  ArrowUpRight,
-  Calendar,
+  TrendingUp, 
+  AlertCircle, 
+  CheckCircle2, 
+  Clock, 
+  Search,
   Filter,
-  Clock,
-  Star,
-  CheckCircle,
-  Shield,
-  MapPin
+  ArrowUpRight,
+  Building2,
+  FileText,
+  LayoutDashboard
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -24,312 +22,314 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  PieChart, 
-  Pie, 
-  Cell,
-  AreaChart,
-  Area
+  Cell
 } from 'recharts';
-import { motion } from 'motion/react';
-import { DashboardStats } from '../types';
-import { storageService } from '../services/storageService';
+import { cn, formatCurrency, formatPercent, formatArea } from '../lib/utils';
 
-const StatCard = ({ 
-  title, 
-  value, 
-  subValue, 
-  icon: Icon, 
-  color, 
-  trend 
-}: { 
-  title: string, 
-  value: string | number, 
-  subValue?: string, 
-  icon: any, 
-  color: string,
-  trend?: { value: string, positive: boolean }
-}) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
-  >
-    <div className="flex items-start justify-between">
-      <div>
-        <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">{title}</p>
-        <h3 className="text-2xl font-bold text-slate-900 mt-1">{value}</h3>
-        {subValue && <p className="text-xs text-slate-400 mt-1">{subValue}</p>}
-        {trend && (
-          <div className={cn(
-            "flex items-center gap-1 mt-3 text-xs font-semibold px-2 py-1 rounded-full w-fit",
-            trend.positive ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
-          )}>
-            {trend.positive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-            {trend.value}
-          </div>
-        )}
+// Stat Card Component for Row 1
+const StatCard = ({ title, items, icon: Icon, color, progress }: any) => (
+  <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full">
+    <div className="flex items-center justify-between mb-4">
+      <div className={cn("p-2 rounded-lg", color)}>
+        <Icon size={20} />
       </div>
-      <div className={cn("p-3 rounded-xl", color)}>
-        <Icon size={24} />
-      </div>
+      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{title}</span>
     </div>
-  </motion.div>
+    <div className="space-y-3 flex-1">
+      {items.map((item: any, idx: number) => (
+        <div key={idx} className="flex justify-between items-end">
+          <span className="text-xs text-slate-500">{item.label}</span>
+          <span className={cn("font-bold text-slate-900", item.isHighlight ? "text-lg" : "text-sm")}>
+            {item.value}
+          </span>
+        </div>
+      ))}
+    </div>
+    {progress !== undefined && (
+      <div className="mt-4 pt-4 border-t border-slate-50">
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-[10px] font-bold text-slate-400 uppercase">Tỷ lệ hoàn thành</span>
+          <span className="text-xs font-bold text-blue-600">{progress}%</span>
+        </div>
+        <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+          <div 
+            className="bg-blue-600 h-full transition-all duration-1000" 
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+      </div>
+    )}
+  </div>
 );
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
-
 export default function Dashboard() {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [projectStatusData, setProjectStatusData] = useState<any[]>([]);
-  const [locationData, setLocationData] = useState<any[]>([]);
-
   useEffect(() => {
-    const data = storageService.getDashboardStats();
-    setStats(data);
-    
-    // Calculate location data
-    const projects = storageService.getProjects();
-    const locCounts: Record<string, number> = {};
-    projects.forEach(p => {
-      if (p.locations) {
-        p.locations.split(',').forEach(loc => {
-          const trimmed = loc.trim();
-          if (trimmed) {
-            locCounts[trimmed] = (locCounts[trimmed] || 0) + 1;
-          }
-        });
-      }
-    });
-    
-    const sortedLocs = Object.entries(locCounts)
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 7);
-    
-    setLocationData(sortedLocs);
-    
-    setProjectStatusData([
-      { name: 'Đúng tiến độ', value: 65 },
-      { name: 'Chậm tiến độ', value: 15 },
-      { name: 'Nguy cơ', value: 20 },
-    ]);
-    
-    setLoading(false);
+    setTimeout(() => setLoading(false), 500);
   }, []);
 
-  const disbursementData = [
-    { name: 'Tháng 1', value: 4000 },
-    { name: 'Tháng 2', value: 3000 },
-    { name: 'Tháng 3', value: 2000 },
-    { name: 'Tháng 4', value: 2780 },
-    { name: 'Tháng 5', value: 1890 },
-    { name: 'Tháng 6', value: 2390 },
+  // Mock Data for Progress Table
+  const progressSteps = [
+    { name: 'Thông báo thu hồi đất', cases: 1250, total: 1250, rate: 100 },
+    { name: 'Kiểm đếm, thu thập hồ sơ pháp lý', cases: 1245, total: 1250, rate: 99.6 },
+    { name: 'Xác nhận hồ sơ pháp lý, nguồn gốc đất', cases: 1180, total: 1220, rate: 96.7 },
+    { name: 'Lập dự thảo phương án bồi thường, hỗ trợ, tái định cư', cases: 1050, total: 1180, rate: 89.0 },
+    { name: 'Niêm yết, công khai dự thảo phương án', cases: 980, total: 1150, rate: 85.2 },
+    { name: 'Ban hành quyết định phê duyệt phương án bồi thường', cases: 850, total: 1100, rate: 77.3 },
+    { name: 'Công khai phương án', cases: 845, total: 1080, rate: 78.2 },
+    { name: 'Chi trả', cases: 720, total: 1050, rate: 68.6 },
+    { name: 'Bàn giao mặt bằng', cases: 680, total: 1020, rate: 66.7 },
+    { name: 'Số trường hợp đã bố trí tái định cư', cases: 320, total: 450, rate: 71.1 },
   ];
 
-  if (loading || !stats) return <div className="flex items-center justify-center h-full">Đang tải dữ liệu...</div>;
+  // Mock Data for Project Chart
+  const projectChartData = [
+    { name: 'Dự án A', progress: 85, status: 'good' },
+    { name: 'Dự án B', progress: 45, status: 'medium' },
+    { name: 'Dự án C', progress: 20, status: 'slow' },
+    { name: 'Dự án D', progress: 92, status: 'good' },
+    { name: 'Dự án E', progress: 60, status: 'medium' },
+    { name: 'Dự án F', progress: 15, status: 'slow' },
+  ];
+
+  // Mock Data for Issues
+  const issues = [
+    { id: 1, project: '', content: 'Vướng mắc đơn giá đất bồi thường', unit: 'Sở Tài nguyên & Môi trường', status: 'Đang xử lý', date: '01/03/2026', color: 'text-amber-600 bg-amber-50' },
+    { id: 2, project: '', content: 'Chưa phê duyệt khu tái định cư', unit: 'UBND Thành phố', status: 'Chưa xử lý', date: '28/02/2026', color: 'text-red-600 bg-red-50' },
+    { id: 3, project: '', content: 'Tranh chấp quyền sử dụng đất', unit: 'UBND Quận/Huyện', status: 'Đang xử lý', date: '02/03/2026', color: 'text-amber-600 bg-amber-50' },
+    { id: 4, project: '', content: 'Hoàn tất chi trả bồi thường', unit: 'Ban QLDA', status: 'Đã giải quyết', date: '25/02/2026', color: 'text-emerald-600 bg-emerald-50' },
+  ];
+
+  if (loading) return <div className="flex items-center justify-center h-full">Đang tải dữ liệu Dashboard...</div>;
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Tổng quan Thành phố</h1>
-          <p className="text-slate-500 mt-1">Dữ liệu cập nhật đến ngày 26/02/2026</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
-            <Calendar size={16} />
-            Năm 2026
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20">
-            <Filter size={16} />
-            Lọc báo cáo
-          </button>
+    <div className="space-y-8 pb-12">
+      {/* VÙNG 1: THÔNG TIN TỔNG QUAN DỰ ÁN */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-blue-600 text-white rounded-lg">
+                <LayoutDashboard size={20} />
+              </div>
+              <h1 className="text-2xl font-bold text-slate-900 uppercase tracking-tight">Dự án thành phần 2: Bồi thường, hỗ trợ, tái định cư trên địa bàn huyện Bình Chánh</h1>
+            </div>
+            <p className="text-slate-500 text-sm">Xã Tân Nhựt, xã Bình Chánh và phường Bình Đông</p>
+          </div>
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* VÙNG 2: KHU VỰC THỐNG KÊ - HÀNG 1 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
-          title="Tổng số dự án" 
-          value={stats.totalProjects} 
-          icon={Briefcase} 
+          title="Tài chính dự án"
+          icon={DollarSign}
           color="bg-blue-50 text-blue-600"
+          progress={65.2}
+          items={[
+            { label: 'TMĐT', value: '15.230 tỷ' },
+            { label: 'Vốn giao 2026', value: '4.855 tỷ' },
+            { label: 'Đã giải ngân', value: '3.165 tỷ', isHighlight: true },
+          ]}
         />
         <StatCard 
-          title="Dự án trọng tâm" 
-          value={stats.priorityProjects} 
-          icon={Star} 
-          color="bg-orange-50 text-orange-500"
+          title="Trường hợp ảnh hưởng"
+          icon={Users}
+          color="bg-amber-50 text-amber-600"
+          progress={54.4}
+          items={[
+            { label: 'Tổng số trường hợp', value: '1.250' },
+            { label: 'Đã thu hồi đất', value: '680', isHighlight: true },
+          ]}
         />
         <StatCard 
-          title="Kế hoạch vốn 2026" 
-          value={formatTrillion(stats.totalCapitalPlan)} 
-          icon={TrendingUp} 
-          color="bg-emerald-50 text-emerald-600"
-        />
-        <StatCard 
-          title="Tỷ lệ giải ngân chung" 
-          value={formatPercent(stats.overallDisbursementRate)} 
-          icon={CheckCircle} 
-          color="bg-blue-50 text-blue-600"
-        />
-        <StatCard 
-          title="Vốn DA Bồi thường" 
-          value={formatTrillion(stats.compensationCapital)} 
-          icon={MapPin} 
+          title="Tái định cư"
+          icon={Building2}
           color="bg-indigo-50 text-indigo-600"
+          progress={25.6}
+          items={[
+            { label: 'Cần bố trí TĐC', value: '1.250' },
+            { label: 'Đã bố trí', value: '320', isHighlight: true },
+          ]}
         />
         <StatCard 
-          title="Giải ngân Bồi thường" 
-          value={formatTrillion(stats.compensationDisbursement)} 
-          icon={CheckCircle} 
+          title="Diện tích thu hồi"
+          icon={Map}
           color="bg-emerald-50 text-emerald-600"
-        />
-        <StatCard 
-          title="Khó khăn vướng mắc" 
-          value={stats.activeIssues} 
-          icon={Shield} 
-          color="bg-red-50 text-red-600"
-        />
-        <StatCard 
-          title="Dự án chậm tiến độ" 
-          value={stats.delayedProjects} 
-          icon={AlertCircle} 
-          color="bg-red-50 text-red-600"
+          progress={54.4}
+          items={[
+            { label: 'Tổng diện tích', value: '450,5 ha' },
+            { label: 'Đã thu hồi', value: '245,2 ha', isHighlight: true },
+          ]}
         />
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-bold text-slate-900">Tiến độ giải ngân theo tháng</h3>
-            <button className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1">
-              Xem chi tiết <ArrowUpRight size={14} />
-            </button>
-          </div>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={disbursementData}>
-                <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                />
-                <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 className="font-bold text-slate-900 mb-6">Trạng thái dự án</h3>
-          <div className="h-[250px] relative">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={projectStatusData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {projectStatusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-2xl font-bold text-slate-900">{stats.totalProjects}</span>
-              <span className="text-xs text-slate-500">Dự án</span>
+      {/* VÙNG 2: KHU VỰC THỐNG KÊ - HÀNG 2 */}
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Khối 1: Bảng tiến độ thực hiện BTGPMB */}
+          <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                <Clock size={18} className="text-blue-600" />
+                TIẾN ĐỘ THỰC HIỆN BTGPMB
+              </h3>
+              <span className="text-[10px] font-bold text-slate-400 uppercase">Cập nhật: 05/03/2026</span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-100 bg-slate-50/50">
+                    <th className="px-6 py-4">Nội dung công việc</th>
+                    <th className="px-6 py-4 text-center">Số trường hợp</th>
+                    <th className="px-6 py-4 text-center">Tỷ lệ (%)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {progressSteps.map((step, idx) => {
+                    const isMax = step.cases === Math.max(...progressSteps.map(s => s.cases));
+                    return (
+                      <tr key={idx} className={cn("hover:bg-slate-50 transition-colors", isMax && "bg-blue-50/30")}>
+                        <td className="px-6 py-3 font-medium text-slate-700">{step.name}</td>
+                        <td className="px-6 py-3 text-center font-bold text-slate-900">
+                          {step.cases.toLocaleString('vi-VN')}/{step.total.toLocaleString('vi-VN')}
+                        </td>
+                        <td className="px-6 py-3 text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <div className="w-16 bg-slate-100 h-1.5 rounded-full overflow-hidden hidden sm:block">
+                              <div 
+                                className="bg-blue-500 h-full" 
+                                style={{ width: `${step.rate}%` }}
+                              ></div>
+                            </div>
+                            <span className="font-bold text-blue-600 min-w-[40px]">{step.rate}%</span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
-          <div className="mt-4 space-y-2">
-            {projectStatusData.map((item, index) => (
-              <div key={item.name} className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index] }}></div>
-                  <span className="text-slate-600">{item.name}</span>
+
+          {/* Khối 2: Danh sách khó khăn vướng mắc (VÙNG 3) */}
+          <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                <AlertCircle size={18} className="text-red-600" />
+                KHÓ KHĂN VƯỚNG MẮC
+              </h3>
+              <button className="text-blue-600 text-xs font-bold hover:underline">XEM TẤT CẢ</button>
+            </div>
+            <div className="divide-y divide-slate-100">
+              {issues.map((issue) => (
+                <div key={issue.id} className="p-4 hover:bg-slate-50 transition-colors">
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-[10px] font-black text-blue-600 uppercase">{issue.project}</span>
+                    <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold", issue.color)}>
+                      {issue.status}
+                    </span>
+                  </div>
+                  <p className="text-sm font-bold text-slate-900 mb-1 line-clamp-2">{issue.content}</p>
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium mt-auto">
+                    <span className="flex items-center gap-1">
+                      <Building2 size={10} /> {issue.unit}
+                    </span>
+                    <span>{issue.date}</span>
+                  </div>
                 </div>
-                <span className="font-semibold text-slate-900">{item.value}%</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      
-      {/* New Location Chart Section */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="font-bold text-slate-900">Dự án theo Địa bàn (P/X/ĐK)</h3>
-          <span className="text-xs text-slate-500">Top 7 địa bàn có nhiều dự án nhất</span>
-        </div>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={locationData} layout="vertical" margin={{ left: 40, right: 40 }}>
-              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
-              <XAxis type="number" hide />
-              <YAxis 
-                dataKey="name" 
-                type="category" 
-                axisLine={false} 
-                tickLine={false} 
-                width={150}
-                tick={{ fontSize: 12, fill: '#64748b', fontWeight: 500 }} 
-              />
-              <Tooltip 
-                cursor={{fill: 'transparent'}} 
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} 
-              />
-              <Bar dataKey="count" name="Số lượng dự án" radius={[0, 4, 4, 0]} barSize={25}>
-                {locationData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
 
-      {/* Alerts Section */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-          <h3 className="font-bold text-slate-900">Cảnh báo hệ thống</h3>
-          <span className="px-2 py-1 bg-red-50 text-red-600 text-xs font-bold rounded">4 CẢNH BÁO MỚI</span>
-        </div>
-        <div className="divide-y divide-slate-100">
-          <div className="p-4 flex items-start gap-4 hover:bg-slate-50 transition-colors">
-            <div className="p-2 bg-red-100 text-red-600 rounded-lg shrink-0">
-              <Clock size={18} />
+        {/* Khối 3: Sơ đồ Gantt trực quan */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+              <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                <TrendingUp size={18} className="text-blue-600" />
+                SƠ ĐỒ TIẾN ĐỘ CHI TIẾT (GANTT CHART)
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">Biểu đồ tiến độ thực hiện theo từng giai đoạn công việc</p>
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-slate-900">Dự án DA-001 chậm bàn giao mặt bằng</p>
-              <p className="text-xs text-slate-500 mt-1">Đã quá hạn 15 ngày so với kế hoạch chỉ đạo.</p>
+            <div className="flex items-center gap-3">
+              <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500/20 transition-all">
+                <option>Dự án Đường Vành đai 3 - TP.HCM</option>
+                <option>Dự án A</option>
+                <option>Dự án B</option>
+              </select>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold uppercase">
+                <Clock size={14} /> Năm 2026
+              </div>
             </div>
-            <button className="text-xs font-medium text-blue-600 hover:underline">Xử lý ngay</button>
           </div>
-          <div className="p-4 flex items-start gap-4 hover:bg-slate-50 transition-colors">
-            <div className="p-2 bg-amber-100 text-amber-600 rounded-lg shrink-0">
-              <DollarSign size={18} />
+          
+          <div className="overflow-x-auto">
+            <div className="min-w-[1000px]">
+              {/* Header Months */}
+              <div className="grid grid-cols-[250px_repeat(12,1fr)] border-b border-slate-100 pb-4 mb-4">
+                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Công việc</div>
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <div key={i} className="text-center text-xs font-bold text-slate-600">Tháng {i + 1}</div>
+                ))}
+              </div>
+
+              {/* Gantt Rows */}
+              <div className="space-y-1">
+                {[
+                  { name: 'Thông báo thu hồi đất', start: 1, duration: 2 },
+                  { name: 'Kiểm đếm', start: 2, duration: 2 },
+                  { name: 'Xác minh nguồn gốc đất', start: 3, duration: 2 },
+                  { name: 'Lập dự thảo PA bồi thường', start: 4, duration: 2 },
+                  { name: 'Niêm yết dự thảo PA bồi thường', start: 5, duration: 2 },
+                  { name: 'Ban hành QĐ phê duyệt PA', start: 6, duration: 1 },
+                  { name: 'Công khai PA', start: 6, duration: 2 },
+                  { name: 'Nhận tiền', start: 7, duration: 2 },
+                  { name: 'Bàn giao mặt bằng', start: 8, duration: 1 },
+                ].map((task, idx) => (
+                  <div key={idx} className="grid grid-cols-[250px_repeat(12,1fr)] items-center group hover:bg-slate-50/50 rounded-lg transition-colors py-3">
+                    <div className="text-xs font-medium text-slate-700 pr-4">{task.name}</div>
+                    <div className="col-span-12 grid grid-cols-12 h-6 relative">
+                      {/* Grid Lines */}
+                      {Array.from({ length: 12 }).map((_, i) => (
+                        <div key={i} className="border-l border-slate-100 h-full first:border-l-0"></div>
+                      ))}
+                      
+                      {/* Task Bar */}
+                      <div 
+                        className="absolute h-full bg-slate-900 rounded-sm shadow-sm transition-all duration-500 group-hover:scale-y-110 group-hover:bg-blue-600"
+                        style={{ 
+                          left: `${((task.start - 1) / 12) * 100}%`, 
+                          width: `${(task.duration / 12) * 100}%` 
+                        }}
+                      >
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="text-[8px] text-white font-bold uppercase">Tháng {task.start} - {task.start + task.duration - 1}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-slate-900">Tỷ lệ giải ngân thấp tại DA-003</p>
-              <p className="text-xs text-slate-500 mt-1">Giải ngân đạt 12% kế hoạch năm (Dưới mức 40% cảnh báo).</p>
+          </div>
+
+          {/* Legend */}
+          <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-2 bg-slate-900 rounded-full"></div>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Tiến độ kế hoạch</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-2 bg-blue-600 rounded-full"></div>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Đang thực hiện</span>
+              </div>
             </div>
-            <button className="text-xs font-medium text-blue-600 hover:underline">Xem chi tiết</button>
+            <p className="text-[10px] text-slate-400 font-medium italic">* Di chuột vào thanh tiến độ để xem chi tiết thời gian</p>
           </div>
         </div>
       </div>
